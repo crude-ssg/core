@@ -61,11 +61,11 @@ class DataCollection
         return empty($this->list);
     }
 
-    public function wire(string $routeParameter, string $attribute): DataCollection
+    public function wire(string $routeParameter, string $attribute)
     {
         return $this->map(fn($item) => [
             $routeParameter => $item[$attribute],
-        ]);
+        ])->all();
     }
 
     public function wireWith(string $routeParameter, string $attribute, string $childRouteParameter, string $childAttribute, string $viaCollection)
