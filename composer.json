@@ -1,0 +1,22 @@
+{
+    "name": "kathenae/crude-core",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "CrudeSSG\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ronald",
+            "email": "RonaldWilsonMachado@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.3.11",
+        "symfony/yaml": "^7.3",
+        "twig/twig": "^3.21"
+    }
+}
