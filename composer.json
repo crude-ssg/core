@@ -1,5 +1,5 @@
 {
-    "name": "crude-ssg/crude-core",
+    "name": "crude-ssg/core",
     "type": "library",
     "license": "BSD-3-Clause",
     "minimum-stability": "dev",
