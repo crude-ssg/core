@@ -25,11 +25,11 @@ class SSGHandler
                 continue;
             }
 
-            $this->renderPage($route);
+            $this->renderRoutePages($route);
         }
     }
 
-    function renderPage(Route $route)
+    function renderRoutePages(Route $route)
     {
         if (!$route->isSsgEnabled()) {
             return [];
@@ -37,16 +37,15 @@ class SSGHandler
 
         $paramsList = $route->getSsgParams();
         if (count($paramsList) == 0) {
-            return [
-                new Request([
-                    'method' => $route->getMethod(),
-                    'uri' => $route->getOriginalPattern(),
-                    'params' => [],
-                ])
-            ];
-        }
+            $request = new Request([
+                'method' => $route->getMethod(),
+                'uri' => $route->getOriginalPattern(),
+                'params' => [],
+            ]);
 
-        $requests = [];
+            $this->renderPage($route, $request);
+            return;
+        }
 
         // Expand combinations
         $expandedParamsList = [];
@@ -70,17 +69,22 @@ class SSGHandler
                 'params' => $params,
             ]);
 
-            try {
-                $response = $route->handle($request);
-                if ($response instanceof Page) {
-                    $this->compile($response, $request);
-                    printf("✅ %s\n", $request->getUri());
-                } else {
-                    printf("⚠️  %s - Must return an instance of Page::class \n", $request->getUri());
-                }
-            } catch (\Throwable $e) {
-                printf("⚠️  %s - %s\n", $request->getUri(), $e->getMessage());
+            $this->renderPage($route, $request);
+        }
+    }
+
+    function renderPage(Route $route, Request $request)
+    {
+        try {
+            $response = $route->handle($request);
+            if ($response instanceof Page) {
+                $this->compile($response, $request);
+                printf("✅ %s\n", $request->getUri());
+            } else {
+                printf("⚠️  %s - Must return an instance of Page::class \n", $request->getUri());
             }
+        } catch (\Throwable $e) {
+            printf("⚠️  %s - %s\n", $request->getUri(), $e->getMessage());
         }
     }
 
