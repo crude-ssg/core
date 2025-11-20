@@ -10,16 +10,22 @@ class HttpHandler
 
     public function handle()
     {
+        $uri = $_SERVER['REQUEST_URI'];
+        $parsed = parse_url($uri);
+        $path = $parsed['path'];
+        $query_params = [];
+        parse_str($parsed['query'] ?? '', $query_params);
+
         foreach ($this->router->all() as $route) {
-            $routeParams = $route->matches($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
-            if ($routeParams) {
+            $routeParams = $route->matches($_SERVER['REQUEST_METHOD'], $path);
+            if (isset($routeParams)) {
                 $request = new Request([
                     'method' => $_SERVER['REQUEST_METHOD'],
                     'uri' => $_SERVER['REQUEST_URI'],
-                    'query' => $_SERVER['QUERY_STRING'],
+                    'query' => $query_params,
                     'cookies' => $_COOKIE,
                     'body' => $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST,
-                    'headers' => $_REQUEST['headers'],
+                    'headers' => getallheaders(),
                     'params' => $routeParams
                 ]);
                 $response = $route->handle($request);

@@ -53,13 +53,13 @@ class Route
         return $this->originalPattern;
     }
 
-    public function matches(string $method, string $uri): ?array
+    public function matches(string $method, string $path): ?array
     {
         if ($this->method !== strtoupper($method)) {
             return null;
         }
 
-        if (preg_match($this->pattern, $uri, $matches)) {
+        if (preg_match($this->pattern, $path, $matches)) {
             // Return only named parameters
             return array_filter(
                 $matches,
