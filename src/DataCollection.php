@@ -81,7 +81,7 @@ class DataCollection
         return array_reduce($this->list, $callback, $initial);
     }
 
-    public function wireArray(string $routeParameter, string $attribute): array
+    public function pluckFromArray(string $attribute)
     {
         $unique = [];
 
@@ -93,8 +93,13 @@ class DataCollection
             }
         }
 
+        return array_keys($unique);
+    }
+
+    public function wireArray(string $routeParameter, string $attribute): array
+    {
         return array_map(fn($entry) => [
             $routeParameter => $entry
-        ], array_keys($unique));
+        ], $this->pluckFromArray($attribute));
     }
 }
