@@ -75,4 +75,24 @@ class DataCollection
             $childRouteParameter => Data::load($viaCollection)->where($routeParameter, $item[$attribute])->pluck($childAttribute)
         ])->all();
     }
+
+    public function wireArrayValues(string $routeParameter, string $arrayKey): array
+    {
+        return $this->map(function ($item) use ($routeParameter, $arrayKey) {
+            $values = [];
+
+            if (!empty($item[$arrayKey]) && is_array($item[$arrayKey])) {
+                $values = $item[$arrayKey];
+            }
+
+            return [
+                $routeParameter => $values,
+            ];
+        })->all();
+    }
+
+    public function reduce(callable $callback, mixed $initial = null): mixed
+    {
+        return array_reduce($this->list, $callback, $initial);
+    }
 }
