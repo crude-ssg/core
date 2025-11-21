@@ -76,23 +76,25 @@ class DataCollection
         ])->all();
     }
 
-    public function wireArrayValues(string $routeParameter, string $arrayKey): array
-    {
-        return $this->map(function ($item) use ($routeParameter, $arrayKey) {
-            $values = [];
-
-            if (!empty($item[$arrayKey]) && is_array($item[$arrayKey])) {
-                $values = $item[$arrayKey];
-            }
-
-            return [
-                $routeParameter => $values,
-            ];
-        })->all();
-    }
-
     public function reduce(callable $callback, mixed $initial = null): mixed
     {
         return array_reduce($this->list, $callback, $initial);
+    }
+
+    public function wireArray(string $routeParameter, string $attribute): array
+    {
+        $unique = [];
+
+        foreach ($this->list as $item) {
+            if (!empty($item[$attribute]) && is_array($item[$attribute])) {
+                foreach ($item[$attribute] as $value) {
+                    $unique[$value] = true;
+                }
+            }
+        }
+
+        return array_map(fn($entry) => [
+            $routeParameter => $entry
+        ], array_keys($unique));
     }
 }
