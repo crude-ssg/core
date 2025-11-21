@@ -31,11 +31,14 @@ class Route
     private function compilePattern(string $pattern): string
     {
         // Convert {param} placeholders to named regex groups
-        return '#^' . preg_replace(
+        $regex = preg_replace(
             '#\{([a-zA-Z_][a-zA-Z0-9_]*)\}#',
             '(?P<$1>[^/]+)',
-            $pattern
-        ) . '$#';
+            rtrim($pattern, '/')
+        );
+
+        // Add optional trailing slash
+        return '#^' . $regex . '/?$#';
     }
 
     public function getMethod(): string
