@@ -3,6 +3,7 @@
 namespace CrudeSSG;
 
 use Twig\Environment;
+use Twig\Extension\ExtensionInterface;
 use Twig\Loader\FilesystemLoader;
 
 class Renderer
@@ -13,6 +14,11 @@ class Renderer
     {
         $loader = new FilesystemLoader($templatesPath);
         $this->twig = new Environment($loader, []);
+    }
+
+    public function addExtension(ExtensionInterface $extension)
+    {
+        $this->twig->addExtension($extension);
     }
 
     public function render(Page $page)
