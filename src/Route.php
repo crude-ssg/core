@@ -89,7 +89,7 @@ class Route
      * @param callable|null $params function that returns list of possible route params
      * @return static
      */
-    public function withSsg(callable $params = null)
+    public function withSsg(?callable $params = null)
     {
         if (is_array($params) && !is_callable($params)) {
             $this->staticParams = fn() => $params;
